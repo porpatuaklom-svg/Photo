@@ -1,0 +1,299 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>สถานะการจอง | GLOWGRAM.FOTO</title>
+  <script type="module" src="approvals.js"></script>
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='48'%3E%F0%9F%93%B7%3C/text%3E%3C/svg%3E">
+
+  <style>
+    :root {
+      --bg: #f7f7f8;
+      --card: #fff;
+      --text: #111;
+      --muted: #666;
+      --border: #e9e9ea;
+      --green: #10b981;
+      --yellow: #f59e0b;
+      --red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      height: 100%;
+    }
+
+    body {
+      margin: 0;
+      font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, "Prompt", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+
+      /* ✅ จัดกึ่งกลางแนวตั้ง-แนวนอน */
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      /* ✅ กันการสั่นจากสกอลบาร์ */
+      overflow-y: scroll;
+      scrollbar-gutter: stable both-edges;
+
+      min-height: 100vh;
+    }
+
+    /* ===== Card กล่องหลัก ===== */
+    .card {
+      width: min(720px, 92vw);
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 32px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .05);
+    }
+
+    .row {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 0 0 6px;
+    }
+
+    p {
+      margin: 6px 0 0;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    /* ===== ป้ายสถานะ ===== */
+    .pill {
+      margin-left: auto;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 10px;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border: 1px solid transparent;
+    }
+
+    .pill svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .pill.pending {
+      color: #5a4100;
+      background: #fff7e6;
+      border-color: #ffe8b3;
+    }
+
+    .pill.pending svg {
+      color: var(--yellow);
+    }
+
+    .pill.approved {
+      color: #064e3b;
+      background: #ecfdf5;
+      border-color: #bbf7d0;
+    }
+
+    .pill.rejected {
+      color: #7f1d1d;
+      background: #fef2f2;
+      border-color: #fecaca;
+    }
+
+    /* ===== Section ข้อมูล ===== */
+    .section {
+      margin-top: 20px;
+      padding-top: 18px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .item {
+      padding: 12px 14px;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      background: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 72px;
+    }
+
+    .label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    .val {
+      margin-top: 4px;
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+
+
+    .hint {
+      margin-top: 18px;
+      font-size: 12px;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* ===== ปุ่มด้านล่าง ===== */
+    .actions {
+      margin-top: 24px;
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      appearance: none;
+      border: 1px solid var(--border);
+      background: #fff;
+      color: var(--text);
+      padding: 10px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-size: 14px;
+      transition: all .2s ease;
+    }
+
+    .btn:hover {
+      background: #f5f5f5;
+    }
+
+    .btn.primary {
+      background: #111;
+      color: #fff;
+      border-color: #111;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 520px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+
+      .card {
+        padding: 24px;
+      }
+    }
+    
+/* ทำให้ปุ่มทุกชนิด (button/a) เท่ากัน */
+.actions .btn,
+.actions a.btn {
+  display: inline-flex;          /* จัดกึ่งกลางแนวตั้ง-แนวนอน */
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;         /* ตัดเส้นใต้ลิงก์ */
+  line-height: 1.2;              /* คุมความสูงให้คงที่ */
+  padding: 10px 16px;            /* ให้เท่ากันทั้งคู่ */
+  min-width: 96px;               /* ตั้งความกว้างขั้นต่ำ (ปรับได้) */
+  height: 40px;                  /* ล็อกความสูงให้เท่ากัน */
+  border-radius: 12px;
+  font-size: 14px;
+  font-weight: 500;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.actions .btn:hover,
+.actions a.btn:hover {
+  background: #f5f5f5;
+}
+
+/* ปุ่มหลัก (ชำระเงิน) */
+.actions .btn.primary,
+.actions a.btn.primary {
+  background: #111;
+  color: #fff;
+  border-color: #111;
+}
+
+
+  </style>
+
+</head>
+
+<body>
+  <main class="card">
+    <div class="row">
+      <span id="statusPill" class="pill pending" title="สถานะ">
+        <!-- ไอคอนจะถูกแทนที่ด้วย JS -->
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2" />
+          <path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <span id="statusText">รออนุมัติ</span>
+      </span>
+    </div>
+    <div>
+      <h1>สถานะการจอง</h1>
+      <p id="statusSub">กำลังดึงข้อมูลล่าสุด…</p>
+    </div>
+
+    <div class="section grid">
+      <div class="item">
+        <div class="label">ผู้จอง</div>
+        <div class="val" id="userName">-</div>
+      </div>
+      <div class="item">
+        <div class="label">อีเมล</div>
+        <div class="val" id="userEmail">-</div>
+      </div>
+      <div class="item">
+        <div class="label">ชื่อเฟซบุ๊ก</div>
+        <div class="val" id="userFacebook">-</div>
+      </div>
+
+      <div class="item">
+        <div class="label">อุปกรณ์</div>
+        <div class="val" id="product">-</div>
+      </div>
+      <div class="item">
+        <div class="label">ราคารวม</div>
+        <div class="val" id="total">-</div>
+      </div>
+      <div class="item">
+        <div class="label">วันที่เช่า</div>
+        <div class="val" id="dates">-</div>
+      </div>
+      <div class="item">
+        <div class="label">จำนวนวัน</div>
+        <div class="val" id="days">-</div>
+      </div>
+    </div>
+
+    <div class="hint">หน้านี้จะอัปเดตอัตโนมัติทันทีที่แอดมินอนุมัติ/ปฏิเสธ</div>
+
+    <div class="actions">
+      <button class="btn" onclick="location.reload()">รีเฟรช</button>
+    </div>
+
+  </main>
+
+</body>
+</html>

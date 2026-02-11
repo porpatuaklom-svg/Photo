@@ -1,0 +1,651 @@
+<!doctype html>
+<html lang="th">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin Dashboard | GLOWGRAM.FOTO</title>
+
+  <link rel="stylesheet" href="admin.css">
+  <link rel="stylesheet" href="drop.css">
+  <script type="module" src="admin.js" defer></script>
+
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='48'%3E%F0%9F%93%B7%3C/text%3E%3C/svg%3E">
+</head>
+
+<body>
+
+  <!-- Header -->
+  <header>
+    <div class="header-inner">
+      <div class="brand" aria-label="GLOWGRAM Admin">
+        <div class="dot">GG</div>
+        <span>GLOWGRAM.FOTO — Admin</span>
+      </div>
+
+      <div class="tabs" role="tablist" aria-label="Admin sections">
+        <button id="tabBookings" class="tab active" role="tab" aria-selected="true">อนุมัติคำขอ</button>
+        <button id="tabProducts" class="tab" role="tab" aria-selected="false">จัดการสินค้า</button>
+        <button id="tabCalendar" class="tab" role="tab" aria-selected="false">ปฏิทินจอง</button>
+        <button id="btnLogout" class="btn ghost" style="margin-left:8px">ออกจากระบบ</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- Bookings -->
+    <section id="panelBookings" class="card">
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <select id="statusFilter" class="input" aria-label="กรองสถานะ">
+            <option value="">สถานะทั้งหมด</option>
+            <option value="pending">จองแล้ว</option>
+            <option value="approved">รับของแล้ว</option>
+            <option value="rejected">คืนของแล้ว</option>
+            
+          </select>
+          <input id="searchBookings" class="input" placeholder="ค้นหา: ชื่อ, facebook , อุปกรณ์" aria-label="ค้นหา">
+        </div>
+        <div class="toolbar-right">
+          <button id="bulkApprove" class="btn primary" disabled>รับของแล้วที่เลือก</button>
+          <button id="bulkReject" class="btn danger" disabled>คืนของแล้วที่เลือก</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th style="width:38px"><input id="chkAll" type="checkbox" aria-label="เลือกทั้งหมด"></th>
+              <th>ผู้จอง</th>
+              <th>facebook</th>
+              <th>อุปกรณ์</th>
+              <th>ช่วงวันที่</th>
+              <th>รวม</th>
+              <th>สถานะ</th>
+              <th>รับ/คืนสินค้า</th>
+            </tr>
+          </thead>
+          <tbody id="bookingsBody">
+            <tr>
+              <td colspan="8">กำลังโหลด…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div id="rowsMeta" class="rows-meta">แสดง 0 รายการ</div>
+    </section>
+
+    <!-- Products -->
+    <section id="panelProducts" class="card" style="display:none">
+      <h2 class="section-title" style="margin:6px 2px 12px 2px;">สินค้าในหน้าแรก</h2>
+
+      <div class="grid" style="margin-bottom:10px">
+        <input id="pId" class="input" placeholder="(สำหรับแก้ไข ปล่อยว่างถ้าเพิ่มใหม่)" readonly>
+        <input id="pName" class="input" placeholder="ชื่อสินค้า เช่น Sony A7 IV">
+        <input id="pPrice" class="input" placeholder="ราคา/วัน เช่น 1200">
+        <input id="pImage" class="input" placeholder="ลิงก์รูปภาพ หรือ path ในโปรเจ็กต์">
+      </div>
+
+      <div class="toolbar">
+        <div class="toolbar-left">
+          <input id="searchProducts" class="input" placeholder="ค้นหาสินค้า...">
+        </div>
+        <div class="toolbar-right">
+          <button id="btnCreate" class="btn primary">เพิ่มใหม่</button>
+          <button id="btnUpdate" class="btn">บันทึกที่แก้ไข</button>
+          <button id="btnClear" class="btn ghost">ล้างฟอร์ม</button>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>ชื่อ</th>
+              <th>ราคา/วัน</th>
+              <th>ภาพ</th>
+              <th>พรีวิว</th>
+              <th>จัดการ</th>
+            </tr>
+          </thead>
+          <tbody id="productsBody">
+            <tr>
+              <td colspan="6">กำลังโหลด…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+   
+    <!-- Calendar -->
+    <section id="panelCalendar" style="display:none">
+      <div class="calendar-card">
+        <div class="cal-top">
+          <div id="calTodayStatus" class="cal-today">
+            กำลังโหลดข้อมูลวันนี้...
+          </div>
+          <div class="cal-toolbar">
+            <button class="cal-nav" id="calPrevMonth">‹</button>
+            <div id="calMonthLabel" class="cal-month">เดือน / ปี</div>
+            <button class="cal-nav" id="calNextMonth">›</button>
+          </div>
+        </div>
+
+        <div class="cal-legend">
+          <span><span class="dot free"></span> วันว่าง (ยังไม่มีจอง)</span>
+          <span><span class="dot busy"></span> มีการจองแล้ว (pending / approved)</span>
+        </div>
+
+        <div class="cal-box">
+          <div class="cal-head">
+            <div>อา</div>
+            <div>จ</div>
+            <div>อ</div>
+            <div>พ</div>
+            <div>พฤ</div>
+            <div>ศ</div>
+            <div>ส</div>
+          </div>
+          <div class="cal-grid" id="calGrid">
+            <!-- เติมด้วย JS -->
+          </div>
+        </div>
+
+        <p class="cal-note">
+          * ข้อมูลมาจาก collection <b>bookings</b> โดยนับเฉพาะสถานะ <b>pending</b> และ <b>approved</b><br>
+          * คลิกวันที่ที่มีการจอง จะมี popup แสดงรายละเอียดแต่ละรายการ
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <style>
+    /* ==== Calendar admin (ไม่มีผลกับหน้าอื่น) ==== */
+    .calendar-card {
+      margin-top: 12px;
+      border-radius: 16px;
+      border: 1px solid #e5e7eb;
+      background: #fff;
+      box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+      padding: 14px;
+    }
+
+    .cal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+
+    .cal-today {
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .cal-toolbar {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, .6);
+      background: #f8fafc;
+      padding: 3px 6px;
+    }
+
+    .cal-month {
+      font-size: 14px;
+      font-weight: 500;
+      min-width: 140px;
+      text-align: center;
+    }
+
+    .cal-nav {
+      border: none;
+      border-radius: 999px;
+      width: 26px;
+      height: 26px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: #fff;
+      box-shadow: 0 0 0 1px rgba(148, 163, 184, .6);
+      cursor: pointer;
+      font-size: 15px;
+    }
+
+    .cal-nav:hover {
+      background: #eff6ff;
+    }
+
+    .cal-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      font-size: 11px;
+      color: #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .cal-legend span {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 2px 8px;
+      border-radius: 999px;
+      border: 1px dashed rgba(148, 163, 184, .7);
+      background: #f9fafb;
+    }
+
+    .cal-legend .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 999px;
+    }
+
+    .cal-legend .dot.free {
+      background: #16a34a;
+    }
+
+    .cal-legend .dot.busy {
+      background: #f97316;
+    }
+
+    .cal-box {
+      border-radius: 12px;
+      border: 1px solid #e5e7eb;
+      overflow: hidden;
+    }
+
+    .cal-head,
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+    }
+
+    .cal-head {
+      background: #f9fafb;
+      border-bottom: 1px solid #e5e7eb;
+    }
+
+    .cal-head>div {
+      font-size: 11px;
+      padding: 6px 4px;
+      text-align: center;
+      text-transform: uppercase;
+      letter-spacing: .06em;
+      color: #9ca3af;
+    }
+
+    .cal-day {
+      min-height: 72px;
+      border-right: 1px solid #e5e7eb;
+      border-bottom: 1px solid #e5e7eb;
+      padding: 4px 4px 6px;
+      position: relative;
+      font-size: 11px;
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .cal-day:nth-child(7n) {
+      border-right: none;
+    }
+
+    .cal-day-number {
+      align-self: flex-start;
+      padding: 2px 6px;
+      border-radius: 999px;
+    }
+
+    .cal-day-status {
+      font-size: 11px;
+      border-radius: 999px;
+      padding: 3px 6px;
+      align-self: flex-start;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .cal-day.muted {
+      background: #fcfcfd;
+      color: #9ca3af;
+    }
+
+    .cal-day.free .cal-day-number {
+      background: #dcfce7;
+      border: 1px solid #16a34a;
+      color: #14532d;
+    }
+
+    .cal-day.free .cal-day-status {
+      background: #dcfce7;
+      color: #166534;
+    }
+
+    .cal-day.busy .cal-day-number {
+      background: #fed7aa;
+      border: 1px solid #f97316;
+      color: #9a3412;
+    }
+
+    .cal-day.busy .cal-day-status {
+      background: #fed7aa;
+      color: #9a3412;
+    }
+
+    .cal-day.today {
+      box-shadow: inset 0 0 0 2px #0ea5e9;
+    }
+
+    .cal-day.clickable {
+      cursor: pointer;
+    }
+
+    .cal-day .count-badge {
+      position: absolute;
+      top: 4px;
+      right: 4px;
+      padding: 2px 6px;
+      font-size: 10px;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, .9);
+      color: #f9fafb;
+    }
+
+    .cal-note {
+      margin-top: 6px;
+      font-size: 11px;
+      color: #6b7280;
+    }
+
+    @media (max-width: 640px) {
+      .cal-day {
+        min-height: 60px;
+      }
+
+      .cal-day-status {
+        display: none;
+      }
+    }
+
+    /* ==== Payments admin – scope แค่ใน #panelPayments ==== */
+    #panelPayments {
+      padding: 16px;
+    }
+
+    #panelPayments .pay-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    #panelPayments h2 {
+      margin: 0;
+      font-weight: 700;
+      font-size: 20px;
+    }
+
+    #panelPayments .pay-sub {
+      color: #666;
+      font-size: 14px;
+      margin-top: 4px;
+    }
+
+    #panelPayments .pay-toolbar {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 12px;
+      align-items: center;
+    }
+
+    #panelPayments .pay-seg {
+      background: #fff;
+      border: 1px solid #e9e9ea;
+      border-radius: 999px;
+      padding: 4px;
+      display: flex;
+      gap: 4px;
+    }
+
+    #panelPayments .pay-seg button {
+      border: 0;
+      background: transparent;
+      padding: 8px 14px;
+      border-radius: 999px;
+      cursor: pointer;
+      font-weight: 600;
+      color: #666;
+    }
+
+    #panelPayments .pay-seg button.active {
+      background: #111;
+      color: #fff;
+    }
+
+    #panelPayments .pay-search {
+      margin-left: auto;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      background: #fff;
+      border: 1px solid #e9e9ea;
+      border-radius: 999px;
+      padding: 6px 10px;
+      min-width: 260px;
+    }
+
+    #panelPayments .pay-search input {
+      border: 0;
+      outline: 0;
+      background: transparent;
+      flex: 1;
+    }
+
+    #panelPayments .pay-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 12px;
+      margin-top: 16px;
+    }
+
+    #panelPayments .card {
+      background: #fff;
+      border: 1px solid #e9e9ea;
+      border-radius: 16px;
+      padding: 14px;
+      display: flex;
+      gap: 12px;
+    }
+
+    #panelPayments .thumb {
+      width: 120px;
+      aspect-ratio: 1/1;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #e9e9ea;
+      cursor: pointer;
+      background: #fafafa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    #panelPayments .thumb img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    #panelPayments .meta {
+      flex: 1;
+      min-width: 0;
+    }
+
+    #panelPayments .row {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    #panelPayments .title {
+      font-weight: 700;
+    }
+
+    #panelPayments .muted {
+      color: #666;
+      font-size: 13px;
+    }
+
+    #panelPayments .pill {
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 700;
+      border: 1px solid transparent;
+    }
+
+    #panelPayments .pill.pending {
+      background: #fff7e6;
+      color: #b45309;
+      border-color: #f5d19a;
+    }
+
+    #panelPayments .pill.approved {
+      background: #ecfdf5;
+      color: #065f46;
+      border-color: #a7f3d0;
+    }
+
+    #panelPayments .pill.rejected {
+      background: #fee2e2;
+      color: #991b1b;
+      border-color: #fecaca;
+    }
+
+    #panelPayments .pill.failed {
+      background: #fff1e6;
+      color: #9a3412;
+      border-color: #ffd7b0;
+    }
+
+    #panelPayments .btns {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+      flex-wrap: wrap;
+    }
+
+    #panelPayments .btn {
+      border: 1px solid #e9e9ea;
+      background: #fff;
+      border-radius: 10px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    #panelPayments .btn.approve {
+      background: #10b981;
+      color: #fff;
+      border-color: transparent;
+    }
+
+    #panelPayments .btn.reject {
+      background: #ef4444;
+      color: #fff;
+      border-color: transparent;
+    }
+
+    #panelPayments .btn.view {
+      border-color: #3b82f6;
+      color: #3b82f6;
+      background: #fff;
+    }
+
+    #panelPayments .tag {
+      font-size: 12px;
+      color: #666;
+    }
+
+    #panelPayments .kv {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      gap: 4px 8px;
+      margin-top: 6px;
+      font-size: 14px;
+    }
+
+    #panelPayments .kv span:first-child {
+      color: #666;
+    }
+
+    /* Image Modal (เฉพาะ payModal) */
+    #payModal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .6);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 50;
+    }
+
+    #payModal.open {
+      display: flex;
+    }
+
+    #payModal .pay-modal-ctr {
+      max-width: 92vw;
+      max-height: 92vh;
+      background: #000;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    #payModal .pay-modal-ctr img {
+      display: block;
+      max-width: 92vw;
+      max-height: 92vh;
+      width: auto;
+      height: auto;
+    }
+
+    #payModal .pay-modal-close {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #fff;
+      border: 0;
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+
+    @media (max-width:480px) {
+      #panelPayments .pay-list {
+        grid-template-columns: 1fr;
+      }
+
+      #panelPayments .thumb {
+        width: 96px;
+      }
+    }
+  </style>
+
+</body>
+
+</html>

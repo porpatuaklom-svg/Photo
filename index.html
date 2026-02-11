@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>GLOWGRAM.FOTO</title>
+    <link rel="stylesheet" href="Style.css" />
+    <script type="module" src="google.js" defer></script>
+    <script type="module" src="uses.js" defer></script>
+    <link rel="icon"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-size='48'%3E%F0%9F%93%B7%3C/text%3E%3C/svg%3E">
+
+</head>
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <a href="index.html" class="logo" aria-label="หน้าแรก GLOWGRAM.FOTO">
+                    <svg class="logo-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                    <span class="logo-text">GLOWGRAM.FOTO</span>
+                </a>
+                <div class="header-actions">
+                    <!-- ปุ่ม Sign In (ถ้าไม่ล็อกอิน) -->
+                    <button id="google" class="btn btn-signin" type="button" aria-label="เข้าสู่ระบบด้วย Google">
+                        <svg width="18" height="18" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                            <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                            <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                            <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                            <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                        <span>Sign In</span>
+                    </button>
+
+                    <!-- เมนูผู้ใช้ (ถ้าล็อกอิน) -->
+                    <div class="user-menu" id="userMenu" tabindex="0" aria-haspopup="true" aria-expanded="false" style="display:none;">
+                        <button class="user-btn" id="userBtn" type="button" aria-label="เมนูผู้ใช้">
+                            <div class="avatar" aria-hidden="true">👤</div>
+                            <span id="userDisplayName">กำลังโหลด...</span>
+                            <svg class="caret" width="16" height="16" viewBox="0 0 24 24" aria-hidden="true">
+                                <path d="M7 10l5 5 5-5" fill="currentColor"></path>
+                            </svg>
+                        </button>
+
+                        <div class="menu-dropdown" id="userDropdown" role="menu">
+                            <a href="my-bookings.html" class="menu-item" role="menuitem">รายการจองของฉัน</a>
+                            <button class="menu-item" id="btnOpenProfile" type="button"
+                                role="menuitem">ข้อมูลลูกค้า</button>
+                            <button class="menu-item danger" id="btnLogout" type="button"
+                                role="menuitem">ออกจากระบบ</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-bg" aria-hidden="true"></div>
+        <div class="container hero-body"></div>
+
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    เช่าอุปกรณ์ถ่ายภาพ <span class="hero-accent">คุณภาพระดับมืออาชีพ</span>
+                </h1>
+
+                <p class="hero-description">
+                    กล้อง เลนส์ ขาตั้งกล้อง และอุปกรณ์ถ่ายภาพคุณภาพสูง พร้อมบริการดูแลเป็นอย่างดี
+                    ให้เช่าในราคาที่เป็นมิตร
+                </p>
+
+                <div class="hero-actions">
+                    <a href="#equipment">
+                        <button class="btn btn-hero btn-lg2" type="button" aria-label="เริ่มค้นหาอุปกรณ์">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                aria-hidden="true">
+                                <circle cx="11" cy="11" r="8" />
+                                <path d="m21 21-4.35-4.35" />
+                            </svg>
+                            เริ่มค้นหาอุปกรณ์
+                        </button>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+        <!-- calendar removed from here and moved to bottom -->
+
+    <!-- Equipment Grid -->
+    <section id="equipment" class="section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">อุปกรณ์แนะนำ</h2>
+                <p class="section-description">
+                    อุปกรณ์ถ่ายภาพและวิดีโอคุณภาพสูง พร้อมให้บริการเช่าในราคาที่เหมาะสม
+                </p>
+            </div>
+
+            <div class="equipment-grid">
+
+            </div>
+
+            <!-- Booking Modal (ต้องมี!) -->
+            <div id="bookingModal" class="modal" aria-hidden="true">
+                <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+                    <h3 id="modalTitle" class="gm">แบบฟอร์มจองอุปกรณ์</h3>
+
+                    <form id="bookingForm">
+                        <div class="form-row">
+                            <label for="productInput">อุปกรณ์</label>
+                            <input type="text" name="product" id="productInput" readonly />
+                        </div>
+
+                        <div class="form-row">
+                            <label for="priceInput">ราคา (ต่อวัน)</label>
+                            <!-- ตัวอย่างค่า: ฿1,200/วัน  หรือ 1200 -->
+                            <input type="text" name="price" id="priceInput" readonly value="฿1,200/วัน" />
+                        </div>
+                        <div class="grid2">
+                            <div class="form-row">
+                                <label for="userName">ชื่อผู้จอง</label>
+                                <input type="text" id="userName" name="userName" readonly />
+                            </div>
+                            <div class="form-row">
+                                <label for="userEmail">อีเมล</label>
+                                <input type="email" id="userEmail" name="userEmail" readonly />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <label for="facebookName">facebook </label>
+                            <input type="text" id="facebookName" name="facebookName"
+                                placeholder="เช่น Lanjakorn Kaewping" required />
+                        </div>
+
+                        <div class="grid2">
+                            <div class="form-row">
+                                <label for="startDate">วันที่เช่า</label>
+                                <input type="date" name="startDate" id="startDate" required />
+                            </div>
+                            <div class="form-row">
+                                <label for="endDate">ถึงวันที่</label>
+                                <input type="date" name="endDate" id="endDate" required />
+                            </div>
+                        </div>
+                        <div class="grid2">
+                            <div class="form-row">
+                                <label for="daysInput">จำนวนวัน</label>
+                                <input type="number" name="days" id="daysInput" min="1" value="1" required />
+                            </div>
+                            <div class="form-row">
+                                <label for="totalPrice">รวมราคา</label>
+                                <input type="text" id="totalPrice" name="totalPrice" readonly value="฿0" />
+                            </div>
+                        </div>
+
+                        <button id="submitBooking" type="submit" class="btn btn-hero w-full">ยืนยันการจอง</button>
+                    </form>
+                </div>
+            </div>
+    </section>
+    <!-- Modal: ข้อมูลลูกค้า (แก้ได้เฉพาะชื่อ) -->
+    <div id="profileModal" class="profile-modal" aria-hidden="true">
+        <div class="profile-dialog" role="dialog" aria-modal="true" aria-labelledby="profileTitle">
+            <div class="profile-header">
+                <h3 id="profileTitle">ข้อมูลลูกค้า</h3>
+                <button class="profile-close" id="closeProfile" aria-label="ปิด">✕</button>
+            </div>
+
+            <div class="profile-body">
+                <label class="form-label">อีเมล (อ่านอย่างเดียว)</label>
+                <input type="email" id="profEmail" class="form-input" readonly>
+
+                <label class="form-label">ชื่อลูกค้า (แก้ไขได้)</label>
+                <input type="text" id="profName" class="form-input" placeholder="ชื่อ-นามสกุล">
+                <small class="muted">*จะแสดงเป็นชื่อบนเมนูมุมขวาบน และใช้ในการจอง</small>
+            </div>
+
+            <div class="profile-actions">
+                <button class="btn" id="cancelProfile" type="button">ยกเลิก</button>
+                <button class="btn primary" id="saveProfile" type="button">บันทึก</button>
+            </div>
+        </div>
+    </div>
+
+<!-- Public booking calendar (moved to bottom) -->
+<section class="calendar-card" style="max-width:1100px;margin:20px auto;padding:14px;background:#fff;border:1px solid #e5e7eb;border-radius:16px;">
+    <div class="cal-top">
+        <div id="calTodayStatus" class="cal-today">กำลังโหลดข้อมูลวันนี้...</div>
+        <div class="cal-toolbar">
+            <button class="cal-nav" id="calPrevMonth">‹</button>
+            <div id="calMonthLabel" class="cal-month">เดือน / ปี</div>
+            <button class="cal-nav" id="calNextMonth">›</button>
+        </div>
+    </div>
+
+    <div class="cal-legend">
+        <span><span class="dot free"></span> วันว่าง (ยังไม่มีจอง)</span>
+        <span><span class="dot busy"></span> มีการจองแล้ว (จองแล้ว / รับของแล้ว)</span>
+    </div>
+
+    <div class="cal-box">
+        <div class="cal-head">
+            <div>อา</div>
+            <div>จ</div>
+            <div>อ</div>
+            <div>พ</div>
+            <div>พฤ</div>
+            <div>ศ</div>
+            <div>ส</div>
+        </div>
+        <div class="cal-grid" id="calGrid"></div>
+    </div>
+
+    <p class="cal-note">* ข้อมูลมาจาก collection <b>bookings</b> โดยนับเฉพาะสถานะ <b>จองแล้ว</b> และ <b>รับของแล้ว</b></p>
+
+        <div style="margin-top:12px;display:flex;gap:8px;justify-content:center;">
+                <a href="index.html" class="btn">กลับหน้าหลัก</a>
+        </div>
+</section>
+
+<!-- Popup modal for messages -->
+<div id="popupModal" class="popup-modal" aria-hidden="true">
+    <div class="popup-ctr">
+        <div class="popup-content">
+            <h3 class="popup-title">ข้อความ</h3>
+            <pre class="popup-body" id="popupBody">...</pre>
+            <div class="popup-actions">
+                <button id="popupClose" class="btn">ตกลง</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

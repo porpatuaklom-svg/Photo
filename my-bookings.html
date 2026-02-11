@@ -1,0 +1,224 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>รายการจองของฉัน | GLOWGRAM.FOTO</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600&display=swap" rel="stylesheet">
+  <script type="module" src="my-bookings.js"></script>
+  <style>
+    :root{
+      --bg:#f7f7f8; --card:#fff; --text:#111; --muted:#6b7280; --border:#e5e7eb;
+      --pill-pending-bg:#fff7e6; --pill-pending:#b45309;
+      --pill-approved-bg:#ecfdf5; --pill-approved:#065f46;
+      --pill-rejected-bg:#fef2f2; --pill-rejected:#991b1b;
+      --pill-paid-bg:#e0f2fe; --pill-paid:#0369a1;
+      --brand:#111;
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      font-family: Prompt, system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background:var(--bg); color:var(--text); margin:0; padding:0;
+    }
+    .container{max-width:980px;margin:24px auto;padding:0 16px}
+    .topbar{
+      display:flex; gap:12px; align-items:center; justify-content:space-between; margin-bottom:12px;
+    }
+    .brand{
+      display:flex; align-items:center; gap:8px; text-decoration:none; color:var(--text);
+      font-weight:600; font-size:18px;
+    }
+    .brand svg{width:22px;height:22px}
+    h1{margin:12px 0 4px 0; font-size:22px}
+    .muted{color:var(--muted); font-size:14px}
+
+    .toolbar{
+      margin-top:16px; display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+    }
+    .filters{display:flex; gap:8px; align-items:center}
+    .select, .btn{
+      border:1px solid var(--border); background:#fff; color:var(--text);
+      padding:8px 10px; border-radius:10px; font:inherit; cursor:pointer;
+    }
+    .btn.primary{background:var(--brand); color:#fff; border-color:var(--brand)}
+    .table-wrap{
+      margin-top:14px; background:var(--card); border:1px solid var(--border); border-radius:12px; overflow:hidden;
+    }
+    table{width:100%; border-collapse:collapse}
+    thead th{
+      background:#111; color:#fff; text-align:left; font-weight:600; padding:12px; font-size:14px;
+      position:sticky; top:0; z-index:1;
+    }
+    td{padding:12px; border-top:1px solid var(--border); vertical-align:middle}
+    tr:hover td{background:#f9fafb}
+
+    .pill{
+      padding:4px 10px; border-radius:999px; font-size:12px; font-weight:600; display:inline-block;
+    }
+    .pending{background:var(--pill-pending-bg); color:var(--pill-pending)}
+    .approved{background:var(--pill-approved-bg); color:var(--pill-approved)}
+    .rejected{background:var(--pill-rejected-bg); color:var(--pill-rejected)}
+    .paid{background:var(--pill-paid-bg); color:var(--pill-paid)}
+    .price{font-weight:600}
+
+    .empty{
+      background:var(--card); border:1px dashed var(--border); border-radius:12px; padding:28px; text-align:center; margin-top:16px;
+    }
+    .empty h3{margin:0 0 8px 0}
+    .empty p{margin:0 0 16px 0; color:var(--muted)}
+    .empty .btn{padding:10px 14px}
+
+    /* มือถือ: แปลงตารางเป็นการ์ดอ่านง่าย */
+    @media (max-width: 680px){
+      thead{display:none}
+      table, tbody, tr, td{display:block; width:100%}
+      tr{border-top:1px solid var(--border)}
+      td{border:none; padding:10px 16px}
+      td::before{
+        content:attr(data-label);
+        display:block; font-size:12px; color:var(--muted); margin-bottom:4px;
+      }
+      .table-wrap{border:none; background:transparent}
+    }
+    /* === การ์ดต่อรายการ (มือถือ) === */
+@media (max-width: 680px){
+  thead{display:none}
+  table, tbody, tr, td{display:block; width:100%}
+
+  /* ให้แต่ละแถวเป็น "การ์ด" แยกกัน */
+  tbody tr.row-card{
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin: 12px 0;
+    box-shadow: 0 1px 2px rgba(0,0,0,.04);
+  }
+
+  /* ช่องในการ์ด */
+  tbody tr.row-card td{
+    border: none;
+    padding: 8px 0;
+  }
+
+  /* เส้นคั่นเบาๆ ระหว่างฟิลด์ */
+  tbody tr.row-card td + td{
+    border-top: 1px dashed var(--border);
+    margin-top: 6px;
+    padding-top: 12px;
+  }
+
+  /* ป้าย label + ค่า */
+  tbody tr.row-card td::before{
+    content: attr(data-label);
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+    margin-bottom: 2px;
+  }
+
+  /* เน้นค่าที่สำคัญ */
+  .price{ font-weight: 700; }
+  .pill{ margin-top: 2px; }
+
+  /* ซ่อนกรอบรวม (ของ table เดิม) ให้เหลือแต่การ์ด */
+  .table-wrap{ border: none; background: transparent; }
+}
+
+/* === เดสก์ท็อป: จัดระเบียบเพิ่มเล็กน้อย === */
+@media (min-width: 681px){
+  tbody tr:hover td{ background: #fafafa; }
+  tbody td{ vertical-align: middle; }
+  .price{ font-weight: 700; }
+}
+/* ปุ่มให้มีสัดส่วนคงที่ */
+.btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  padding:10px 14px;
+  border-radius:10px;
+  line-height:1.2;
+  min-height:40px; /* กันตัวอักษรตัด */
+}
+
+/* พิลล์ให้สูงพอดีและไม่ลอย */
+.pill{
+  display:inline-flex;
+  align-items:center;
+  height:28px;
+  padding:0 10px;
+}
+
+/* การจัดการ์ด (มือถือ) ให้ปุ่มเต็มแถวและมีช่องว่างพอดี */
+@media (max-width:680px){
+  tbody tr.row-card td{
+    padding:10px 0;
+  }
+  tbody tr.row-card td + td{
+    border-top:1px dashed var(--border);
+    margin-top:6px;
+    padding-top:12px;
+  }
+  .row-card .pay-cell{
+    margin-top:4px;
+  }
+  .row-card .pay-cell .btn{
+    width:100%;       /* ปุ่มเต็มความกว้างของการ์ด */
+    height:44px;      /* สูงกำลังดีสำหรับนิ้วแตะ */
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="topbar">
+      <a href="index.html" class="brand" aria-label="กลับหน้าแรก">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0h6"/></svg>
+        GLOWGRAM.FOTO
+      </a>
+    </div>
+
+    <h1>รายการจองของฉัน</h1>
+
+    <div class="toolbar">
+      <div class="filters">
+        <label for="statusFilter" class="muted">สถานะ:</label>
+        <select id="statusFilter" class="select" aria-label="ตัวกรองสถานะ">
+          <option value="all">ทั้งหมด</option>
+          <option value="pending">จองแล้ว</option>
+          <option value="approved">รับของแล้ว</option>
+          <option value="rejected">คืนของแล้ว</option>
+        </select>
+      </div>
+      <button id="refreshBtn" class="btn">รีเฟรช</button>
+    </div>
+
+    <div class="table-wrap">
+      <table aria-label="ตารางรายการจอง">
+        <thead>
+          <tr>
+            <th>อุปกรณ์</th>
+            <th>วันที่เช่า</th>
+            <th>รวม</th>
+            <th>สถานะ</th>
+          </tr>
+        </thead>
+        <tbody id="myBookingsBody">
+          <tr><td colspan="5">กำลังโหลด...</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div id="emptyState" class="empty" style="display:none">
+      <h3>ยังไม่มีรายการจอง</h3>
+      <p>เริ่มต้นเช่าอุปกรณ์ตัวแรกของคุณได้เลย</p>
+      <a class="btn primary" href="index.html#equip">ค้นหาอุปกรณ์</a>
+    </div>
+  </div>
+</body>
+</html>

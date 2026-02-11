@@ -1,0 +1,88 @@
+body { display:flex; align-items:center; justify-content:center; min-height:100vh; background:#f1f5f9; }
+    .login-card {
+      background:white; padding:32px; border-radius:16px; width:100%; max-width:400px;
+      box-shadow:0 10px 30px rgba(0,0,0,.1); text-align:center;
+    }
+    .login-card h1 { margin-bottom:20px; font-size:24px; }
+    .login-card input {
+      width:100%; padding:12px; border:1px solid #ddd; border-radius:8px; margin-bottom:14px;
+    }
+    .login-card button {
+      width:100%; padding:12px; background:#000000; color:white; border:none; border-radius:8px;
+      font-weight:600; cursor:pointer; transition:.2s;
+    }
+    .login-card button:hover { background:#000000; }
+    .login-card .muted { font-size:14px; color:#666; margin-top:14px; }.social {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+*{box-sizing:border-box} body{margin:0;font-family:'Prompt',system-ui,-apple-system,Segoe UI,Roboto,sans-serif;color:var(--ink);background:var(--bg)}
+
+
+.register-card {
+    background: white;
+    padding: 32px;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 420px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, .1);
+    text-align: center;
+}
+
+.register-card h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+
+.register-card input {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 14px;
+}
+
+.register-card button {
+    width: 100%;
+    padding: 12px;
+    background: #000000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.register-card button:hover {
+    background: #000000;
+}
+
+.register-card .muted {
+    font-size: 14px;
+    color: #666;
+    margin-top: 14px;
+}
+
+.social {
+    display: flex;
+    gap: 12px;
+    margin-top: 12px;
+}
+
+.go {
+    width: 100%;
+    padding: 12px;
+    background: #3b7de9;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: .2s;
+}
+
+.bx-user-circle{
+    font-size: 50px;
+}
