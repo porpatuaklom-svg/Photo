@@ -1211,3 +1211,7 @@ body .modal .modal-content{
     padding-top: 10vh !important;
   }
 }
+
+.display-none {
+    display: none;
+}

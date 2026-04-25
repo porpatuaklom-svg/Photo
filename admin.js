@@ -9,12 +9,12 @@ import {
 
 // ===== Firebase Config =====
 const firebaseConfig = {
-  apiKey: "AIzaSyAc3b55iLj-R8VYOV80yqkucuGrUMpkxN4",
-  authDomain: "glowgramfotoweb.firebaseapp.com",
-  projectId: "glowgramfotoweb",
-  storageBucket: "glowgramfotoweb.firebasestorage.app",
-  messagingSenderId: "399895216273",
-  appId: "1:399895216273:web:3dac6c5901fa04bc663f30"
+  apiKey: "AIzaSyDugjVmL2TfZpbjdaRh9w5anCMS01XwAOQ",
+  authDomain: "glowgram-49b76.firebaseapp.com",
+  projectId: "glowgram-49b76",
+  storageBucket: "glowgram-49b76.firebasestorage.app",
+  messagingSenderId: "923913334247",
+  appId: "1:923913334247:web:7aab859132f2d5d1cd6142"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -40,7 +40,7 @@ function normalizeDriveUrl(url = "") {
 // ====== ตรวจสิทธิ์แอดมินเบื้องต้น ======
 const ADMIN_EMAILS = [
   "lanjakorn13524@gmail.com",
-  "",
+  "porpatuaklom@gmail.com",
   "glowgramfotore@gmail.com"
 ]; // ปรับตามต้องการ
 async function isAdminByFirestore(uid) {
@@ -315,18 +315,16 @@ function renderProducts(list) {
       <td>${d.name || "-"}</td>
       <td>${d.pricePerDay || "-"}</td>
       <td style="max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
-        ${
-          rawImage
-            ? `<a href="${imgUrl}" target="_blank" rel="noopener">${rawImage}</a>`
-            : "-"
-        }
+        ${rawImage
+        ? `<a href="${imgUrl}" target="_blank" rel="noopener">${rawImage}</a>`
+        : "-"
+      }
       </td>
       <td style="width:72px">
-        ${
-          imgUrl
-            ? `<img src="${imgUrl}" alt="" style="width:64px;height:48px;object-fit:cover;border-radius:6px" onerror="this.style.opacity=.3">`
-            : "-"
-        }
+        ${imgUrl
+        ? `<img src="${imgUrl}" alt="" style="width:64px;height:48px;object-fit:cover;border-radius:6px" onerror="this.style.opacity=.3">`
+        : "-"
+      }
       </td>
       <td>
         <button class="btn" data-act="edit" data-id="${id}">แก้ไข</button>
@@ -692,7 +690,7 @@ function renderCalendar() {
   bookingsCache.forEach(b => {
     if (!["pending", "approved"].includes(b.status)) return;
     if (!b.startDate || !b.endDate) return;
-    
+
     // Parse startDate และ endDate
     const start = new Date(b.startDate);
     const end = new Date(b.endDate);

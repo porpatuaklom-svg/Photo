@@ -6,29 +6,29 @@ import { getFirestore, collection, query, where, orderBy, onSnapshot } from "htt
 
 // ----- Firebase -----
 const firebaseConfig = {
-  apiKey: "AIzaSyAc3b55iLj-R8VYOV80yqkucuGrUMpkxN4",
-  authDomain: "glowgramfotoweb.firebaseapp.com",
-  projectId: "glowgramfotoweb",
-  storageBucket: "glowgramfotoweb.firebasestorage.app",
-  messagingSenderId: "399895216273",
-  appId: "1:399895216273:web:3dac6c5901fa04bc663f30"
+  apiKey: "AIzaSyDugjVmL2TfZpbjdaRh9w5anCMS01XwAOQ",
+  authDomain: "glowgram-49b76.firebaseapp.com",
+  projectId: "glowgram-49b76",
+  storageBucket: "glowgram-49b76.firebasestorage.app",
+  messagingSenderId: "923913334247",
+  appId: "1:923913334247:web:7aab859132f2d5d1cd6142"
 };
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
-const db   = getFirestore(app);
+const db = getFirestore(app);
 
 // ----- DOM -----
-const tbody        = document.getElementById("myBookingsBody");
-const emptyState   = document.getElementById("emptyState");
+const tbody = document.getElementById("myBookingsBody");
+const emptyState = document.getElementById("emptyState");
 const statusFilter = document.getElementById("statusFilter");
-const refreshBtn   = document.getElementById("refreshBtn");
+const refreshBtn = document.getElementById("refreshBtn");
 
 // โปรไฟล์เมนู (กัน null)
-const userBtn      = document.getElementById("userBtn");
+const userBtn = document.getElementById("userBtn");
 const userDropdown = document.getElementById("userDropdown");
-const userMenu     = document.getElementById("userMenu");
-const userDisplay  = document.getElementById("userDisplayName");
-const btnLogout    = document.getElementById("btnLogout");
+const userMenu = document.getElementById("userMenu");
+const userDisplay = document.getElementById("userDisplayName");
+const btnLogout = document.getElementById("btnLogout");
 
 // ----- Utils -----
 const money = (n) => {
@@ -46,28 +46,28 @@ const dateRangeText = (start, end) => {
   const s = toDateObj(start);
   const e = toDateObj(end);
   if (!s && !e) return "-";
-  const fmt = (d) => d.toLocaleDateString("th-TH", { year:"numeric", month:"short", day:"numeric" });
+  const fmt = (d) => d.toLocaleDateString("th-TH", { year: "numeric", month: "short", day: "numeric" });
   if (s && e) return `${fmt(s)} – ${fmt(e)}`;
   return s ? fmt(s) : fmt(e);
 };
 const statusMap = {
-  pending : { text:"จองแล้ว",     cls:"pending"  },
-  approved: { text:"รับของแล้ว",   cls:"approved" },
-  rejected: { text:"คืนของแล้ว",   cls:"rejected" },
-  paid    : { text:"ชำระเงินแล้ว", cls:"paid"     },
+  pending: { text: "จองแล้ว", cls: "pending" },
+  approved: { text: "รับของแล้ว", cls: "approved" },
+  rejected: { text: "คืนของแล้ว", cls: "rejected" },
+  paid: { text: "ชำระเงินแล้ว", cls: "paid" },
 };
 function statusPill(statusRaw) {
-  const key  = String(statusRaw || "pending").toLowerCase();
+  const key = String(statusRaw || "pending").toLowerCase();
   const conf = statusMap[key] || statusMap["pending"];
   return `<span class="pill ${conf.cls}">${conf.text}</span>`;
 }
-function escapeHtml(str){
+function escapeHtml(str) {
   return String(str ?? "")
-    .replaceAll("&","&amp;")
-    .replaceAll("<","&lt;")
-    .replaceAll(">","&gt;")
-    .replaceAll('"',"&quot;")
-    .replaceAll("'","&#039;");
+    .replaceAll("&", "&amp;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("'", "&#039;");
 }
 
 // ----- Render -----
@@ -90,9 +90,9 @@ function renderRows(items) {
   if (emptyState) emptyState.style.display = "none";
 
   const rows = filtered.map(b => {
-    const name   = b.productName || b.product || "(ไม่ระบุอุปกรณ์)";
-    const total  = b.total ?? b.totalPrice ?? b.price ?? 0;
-    const range  = dateRangeText(b.startDate || b.start, b.endDate || b.end);
+    const name = b.productName || b.product || "(ไม่ระบุอุปกรณ์)";
+    const total = b.total ?? b.totalPrice ?? b.price ?? 0;
+    const range = dateRangeText(b.startDate || b.start, b.endDate || b.end);
     const stHtml = statusPill(b.status || (b.paid ? "paid" : "pending"));
     return `
       <tr class="row-card">
@@ -135,10 +135,10 @@ function startListenFallback(uid) {
   );
   unsubscribe = onSnapshot(q, (snap) => {
     const items = snap.docs.map(d => ({ _id: d.id, ...d.data() }))
-      .sort((a,b) => {
+      .sort((a, b) => {
         const ax = a?.createdAt?.toMillis?.() ?? new Date(a?.createdAt || 0).getTime();
         const bx = b?.createdAt?.toMillis?.() ?? new Date(b?.createdAt || 0).getTime();
-        return (bx||0) - (ax||0);
+        return (bx || 0) - (ax || 0);
       });
     renderRows(items);
   }, (err) => {
@@ -146,7 +146,7 @@ function startListenFallback(uid) {
   });
 }
 
-function stopListen(){
+function stopListen() {
   if (typeof unsubscribe === "function") {
     unsubscribe();
     unsubscribe = null;

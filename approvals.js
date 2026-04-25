@@ -4,16 +4,16 @@ import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasej
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyAc3b55iLj-R8VYOV80yqkucuGrUMpkxN4",
-  authDomain: "glowgramfotoweb.firebaseapp.com",
-  projectId: "glowgramfotoweb",
-  storageBucket: "glowgramfotoweb.firebasestorage.app",
-  messagingSenderId: "399895216273",
-  appId: "1:399895216273:web:3dac6c5901fa04bc663f30"
+  apiKey: "AIzaSyDugjVmL2TfZpbjdaRh9w5anCMS01XwAOQ",
+  authDomain: "glowgram-49b76.firebaseapp.com",
+  projectId: "glowgram-49b76",
+  storageBucket: "glowgram-49b76.firebasestorage.app",
+  messagingSenderId: "923913334247",
+  appId: "1:923913334247:web:7aab859132f2d5d1cd6142"
 };
 
 const app = initializeApp(firebaseConfig);
-const db  = getFirestore(app);
+const db = getFirestore(app);
 const auth = getAuth(app);
 
 const $ = (id) => document.getElementById(id);
@@ -22,12 +22,18 @@ const id = new URLSearchParams(location.search).get("id");
 // ปุ่มชำระเงินถูกเอาออกจากระบบ — ไม่มีการแสดงปุ่มชำระเงินอีกต่อไป
 
 const statusMap = {
-  pending:  { text: "จองแล้ว",  cls: "pending",
-    icon:'<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' },
-  approved: { text: "รับของแล้ว", cls: "approved",
-    icon:'<svg viewBox="0 0 24 24" fill="none"><path d="M20 7L10 17l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>' },
-  rejected: { text: "คืนของแล้ว",  cls: "rejected",
-    icon:'<svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>' },
+  pending: {
+    text: "จองแล้ว", cls: "pending",
+    icon: '<svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+  },
+  approved: {
+    text: "รับของแล้ว", cls: "approved",
+    icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M20 7L10 17l-4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>'
+  },
+  rejected: {
+    text: "คืนของแล้ว", cls: "rejected",
+    icon: '<svg viewBox="0 0 24 24" fill="none"><path d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>'
+  },
 };
 
 const fmtTHB = (n) =>
@@ -68,9 +74,9 @@ if (!id) {
 
     // คำบรรยายใต้หัว
     let sub =
-      d.status === "pending"  ? "คำขอของคุณถูกบันทึกเป็น จองแล้ว" :
-      d.status === "approved" ? "ผู้ดูแลยืนยันว่าได้รับของแล้ว" :
-                                "ผู้ดูแลบันทึกว่าได้คืนของแล้ว";
+      d.status === "pending" ? "คำขอของคุณถูกบันทึกเป็น จองแล้ว" :
+        d.status === "approved" ? "ผู้ดูแลยืนยันว่าได้รับของแล้ว" :
+          "ผู้ดูแลบันทึกว่าได้คืนของแล้ว";
 
     const ts = d.statusUpdatedAt?.toDate ? d.statusUpdatedAt.toDate() : null;
     if (ts) {
@@ -81,12 +87,12 @@ if (!id) {
     $("statusSub").textContent = sub;
 
     // เติมข้อมูลรายละเอียด
-    $("userName").textContent     = d.userName || "-";
-    $("userEmail").textContent    = d.userEmail || "-";
-    $("product").textContent      = d.product || "-";
-    $("total").textContent        = d.total ? fmtTHB(d.total) : "-";
-    $("dates").textContent        = (d.startDate && d.endDate) ? `${d.startDate} → ${d.endDate}` : "-";
-    $("days").textContent         = d.days ?? "-";
+    $("userName").textContent = d.userName || "-";
+    $("userEmail").textContent = d.userEmail || "-";
+    $("product").textContent = d.product || "-";
+    $("total").textContent = d.total ? fmtTHB(d.total) : "-";
+    $("dates").textContent = (d.startDate && d.endDate) ? `${d.startDate} → ${d.endDate}` : "-";
+    $("days").textContent = d.days ?? "-";
     $("userFacebook").textContent = d.facebookName || "-";
 
     // ฟีเจอร์การชำระเงินถูกเอาออก — ไม่แสดงปุ่มชำระเงินและไม่มีการนำทางไปยังหน้าชำระเงิน

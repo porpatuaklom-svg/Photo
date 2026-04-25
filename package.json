@@ -1,0 +1,8 @@
+{
+  "name": "glowgram",
+  "version": "1.0.0",
+  "description": "GLOWGRAM.FOTO - Photography booking platform",
+  "scripts": {
+    "start": "npx serve . -p 3000"
+  }
+}

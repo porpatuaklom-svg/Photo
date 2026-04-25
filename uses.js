@@ -1,18 +1,18 @@
 // uses.js (หน้าเลือกอุปกรณ์ + ฟอร์มจอง + โปรไฟล์ + ปฏิทินจองแอดมิน)
 import { initializeApp } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-app.js";
-import {getAuth, onAuthStateChanged, updateProfile, signOut} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
-import {getFirestore,collection,addDoc,serverTimestamp,doc,getDoc,getDocs,setDoc,query,orderBy,onSnapshot} from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, updateProfile, signOut } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
+import { getFirestore, collection, addDoc, serverTimestamp, doc, getDoc, getDocs, setDoc, query, orderBy, onSnapshot } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-firestore.js";
 
 /* =========================
    FIREBASE
 ========================= */
 const firebaseConfig = {
-  apiKey: "AIzaSyAc3b55iLj-R8VYOV80yqkucuGrUMpkxN4",
-  authDomain: "glowgramfotoweb.firebaseapp.com",
-  projectId: "glowgramfotoweb",
-  storageBucket: "glowgramfotoweb.firebasestorage.app",
-  messagingSenderId: "399895216273",
-  appId: "1:399895216273:web:3dac6c5901fa04bc663f30"
+  apiKey: "AIzaSyDugjVmL2TfZpbjdaRh9w5anCMS01XwAOQ",
+  authDomain: "glowgram-49b76.firebaseapp.com",
+  projectId: "glowgram-49b76",
+  storageBucket: "glowgram-49b76.firebasestorage.app",
+  messagingSenderId: "923913334247",
+  appId: "1:923913334247:web:7aab859132f2d5d1cd6142"
 };
 
 const app = initializeApp(firebaseConfig);
@@ -46,33 +46,33 @@ const tabC = document.getElementById("tabCalendar");
 const panelC = document.getElementById("panelCalendar");
 
 // ฟอร์มจอง + ฟิลด์ในโมดัล
-const modal       = document.getElementById("bookingModal");
-const form        = document.getElementById("bookingForm");
-const submitBtn   = document.getElementById("submitBooking");
-const productEl   = document.getElementById("productInput");
-const priceEl     = document.getElementById("priceInput");
+const modal = document.getElementById("bookingModal");
+const form = document.getElementById("bookingForm");
+const submitBtn = document.getElementById("submitBooking");
+const productEl = document.getElementById("productInput");
+const priceEl = document.getElementById("priceInput");
 const startDateEl = document.getElementById("startDate");
-const endDateEl   = document.getElementById("endDate");
-const daysEl      = document.getElementById("daysInput");
-const totalEl     = document.getElementById("totalPrice");
-const facebookEl  = document.getElementById("facebookName");
-const userNameEl  = document.getElementById("userName");   // ชื่อผู้จอง
+const endDateEl = document.getElementById("endDate");
+const daysEl = document.getElementById("daysInput");
+const totalEl = document.getElementById("totalPrice");
+const facebookEl = document.getElementById("facebookName");
+const userNameEl = document.getElementById("userName");   // ชื่อผู้จอง
 const userEmailEl = document.getElementById("userEmail");  // อีเมลผู้จอง
 
 // เมนูโปรไฟล์บนเฮดเดอร์
-const userDropdown    = document.getElementById("userDropdown");
+const userDropdown = document.getElementById("userDropdown");
 const userDisplayName = document.getElementById("userDisplayName");
-const btnLogout       = document.getElementById("btnLogout");
-const btnOpenProfile  = document.getElementById("btnOpenProfile");
-const userMenu        = document.getElementById("userMenu");
+const btnLogout = document.getElementById("btnLogout");
+const btnOpenProfile = document.getElementById("btnOpenProfile");
+const userMenu = document.getElementById("userMenu");
 
 // โมดัลโปรไฟล์
 const profileModal = document.getElementById("profileModal");
 const closeProfile = document.getElementById("closeProfile");
 const cancelProfile = document.getElementById("cancelProfile");
-const saveProfile   = document.getElementById("saveProfile");
-const profEmail     = document.getElementById("profEmail");
-const profName      = document.getElementById("profName");
+const saveProfile = document.getElementById("saveProfile");
+const profEmail = document.getElementById("profEmail");
+const profName = document.getElementById("profName");
 
 /* =========================
    HELPERS
@@ -150,7 +150,7 @@ async function isDateRangeAvailableForProduct(productName, startYMD, endYMD) {
     let conflict = null;
 
     const aStart = toDate(startYMD);
-    const aEnd   = toDate(endYMD);
+    const aEnd = toDate(endYMD);
     if (!aStart || !aEnd) return { ok: false, conflict: null };
 
     snap.forEach(docu => {
@@ -165,7 +165,7 @@ async function isDateRangeAvailableForProduct(productName, startYMD, endYMD) {
       if (!["pending", "approved"].includes(status)) return;
 
       const bStart = toDate(data.startDate);
-      const bEnd   = toDate(data.endDate);
+      const bEnd = toDate(data.endDate);
       if (!bStart || !bEnd) return;
 
       if (rangesOverlap(aStart, aEnd, bStart, bEnd)) {
@@ -201,9 +201,9 @@ async function loadProducts() {
 
     const isLoggedIn = !!(auth.currentUser || localStorage.getItem("isLoggedIn"));
     grid.innerHTML = items.map(d => {
-      const name  = d.name || "-";
+      const name = d.name || "-";
       const price = Number(d.pricePerDay || 0);
-      const img   = normalizeDriveUrl(d.imageUrl || "");
+      const img = normalizeDriveUrl(d.imageUrl || "");
       const dataPriceText = `฿${price}/วัน`;
       const bookBtn = isLoggedIn
         ? `<button class="btn btn-hero btn-lg2 button-container2 book-btn" type="button" data-product="${name}" data-price="${dataPriceText}" onclick="window.__openBooking && window.__openBooking(this)">จองเลย</button>`
@@ -257,7 +257,7 @@ function closeModal() {
 }
 
 // เรียกตอนผู้ใช้กดปุ่มล็อกอินบน card หากยังไม่ได้ล็อกอิน
-window.triggerGoogleLogin = function(btnEl) {
+window.triggerGoogleLogin = function (btnEl) {
   try {
     const product = btnEl?.getAttribute("data-product") || "";
     const price = btnEl?.getAttribute("data-price") || "";
@@ -288,7 +288,7 @@ function computeEndFromStartAndDays() {
 }
 function computeDaysFromRange() {
   const start = toDate(startDateEl?.value);
-  const end   = toDate(endDateEl?.value);
+  const end = toDate(endDateEl?.value);
   if (!start || !end) return;
   if (end < start) {
     if (endDateEl && startDateEl) endDateEl.value = startDateEl.value;
@@ -299,7 +299,7 @@ function computeDaysFromRange() {
 }
 function updateTotal() {
   const price = parsePricePerDay(priceEl?.value);
-  const days  = Math.max(1, parseInt(daysEl?.value || "1", 10));
+  const days = Math.max(1, parseInt(daysEl?.value || "1", 10));
   if (totalEl) totalEl.value = formatTHB(price * days);
 }
 
@@ -340,12 +340,12 @@ window.__openBooking = (btnEl) => {
 
   if (btnEl) {
     const product = btnEl.getAttribute("data-product") || "";
-    const price   = btnEl.getAttribute("data-price") || "";
+    const price = btnEl.getAttribute("data-price") || "";
     if (productEl) productEl.value = product;
-    if (priceEl)   priceEl.value   = price;
+    if (priceEl) priceEl.value = price;
   }
 
-  if (userNameEl)  userNameEl.value  = currentUserName || localStorage.getItem("loggedusername") || "";
+  if (userNameEl) userNameEl.value = currentUserName || localStorage.getItem("loggedusername") || "";
   if (userEmailEl) userEmailEl.value = currentUserEmail || localStorage.getItem("userEmail") || "";
 
   updateTotal();
@@ -365,7 +365,7 @@ function refreshHeaderName(name, email) {
 function updateHeaderUI(isLoggedIn) {
   const googleBtn = document.getElementById("google");
   const userMenuEl = document.getElementById("userMenu");
-  
+
   if (isLoggedIn) {
     // ซ่อนปุ่ม Sign In แสดง user menu
     if (googleBtn) googleBtn.style.display = "none";
@@ -378,12 +378,12 @@ function updateHeaderUI(isLoggedIn) {
 }
 
 onAuthStateChanged(auth, async (user) => {
-  currentUser      = user || null;
+  currentUser = user || null;
   currentUserEmail = user?.email || localStorage.getItem("userEmail") || "";
 
   if (!user) {
     currentUserName = "";
-    if (userNameEl)  userNameEl.value  = "";
+    if (userNameEl) userNameEl.value = "";
     if (userEmailEl) userEmailEl.value = "";
     refreshHeaderName("", "");
     updateHeaderUI(false);
@@ -413,16 +413,16 @@ onAuthStateChanged(auth, async (user) => {
     }
   }
 
-  if (userNameEl)  userNameEl.value  = currentUserName;
+  if (userNameEl) userNameEl.value = currentUserName;
   if (userEmailEl) userEmailEl.value = currentUserEmail;
 
   refreshHeaderName(
     currentUserName || user.displayName || localStorage.getItem("loggedusername") || "",
     user.email || ""
   );
-  
+
   updateHeaderUI(true);
-  
+
   // ถ้ามี pending booking ให้เปิด modal และเติมค่า (ทำครั้งเดียว)
   try {
     const pendingRaw = localStorage.getItem("pendingBooking");
@@ -463,8 +463,8 @@ form?.addEventListener("submit", async (e) => {
   }
 
   try {
-    const startYMD    = startDateEl.value;
-    const endYMD      = endDateEl.value;
+    const startYMD = startDateEl.value;
+    const endYMD = endDateEl.value;
     const productName = productEl?.value || "";
 
     // ✅ เช็คว่าช่วงวันที่นี้ มีคนจองอุปกรณ์นี้อยู่แล้วหรือไม่
@@ -525,17 +525,17 @@ form?.addEventListener("submit", async (e) => {
     }
 
     const payload = {
-      product:      productEl?.value || "",
-      pricePerDay:  parsePricePerDay(priceEl?.value),
-      startDate:    startDateEl?.value || "",
-      endDate:      endDateEl?.value || "",
-      days:         Math.max(1, Number(daysEl?.value || 1)),
-      total:        Number((totalEl?.value || "").toString().replace(/[^\d.]/g, "")),
-      status:       "pending",
-      createdAt:    serverTimestamp(),
-      userId:       uid,
-      userName:     bookedName || "",
-      userEmail:    bookedEmail || "",
+      product: productEl?.value || "",
+      pricePerDay: parsePricePerDay(priceEl?.value),
+      startDate: startDateEl?.value || "",
+      endDate: endDateEl?.value || "",
+      days: Math.max(1, Number(daysEl?.value || 1)),
+      total: Number((totalEl?.value || "").toString().replace(/[^\d.]/g, "")),
+      status: "pending",
+      createdAt: serverTimestamp(),
+      userId: uid,
+      userName: bookedName || "",
+      userEmail: bookedEmail || "",
       facebookName: (facebookEl?.value || "").trim(),
     };
 
@@ -685,11 +685,11 @@ myBookingsLink?.addEventListener("click", (e) => {
 ========================= */
 
 // DOM calendar
-const calMonthLabel  = document.getElementById("calMonthLabel");
-const calGrid        = document.getElementById("calGrid");
+const calMonthLabel = document.getElementById("calMonthLabel");
+const calGrid = document.getElementById("calGrid");
 const calTodayStatus = document.getElementById("calTodayStatus");
-const calPrevMonth   = document.getElementById("calPrevMonth");
-const calNextMonth   = document.getElementById("calNextMonth");
+const calPrevMonth = document.getElementById("calPrevMonth");
+const calNextMonth = document.getElementById("calNextMonth");
 
 // state
 let calYear;
@@ -705,8 +705,8 @@ function calToDate(ymd) {
   return isNaN(dt) ? null : dt;
 }
 function calToYMD(d) {
-  const y   = d.getFullYear();
-  const m   = String(d.getMonth() + 1).padStart(2, "0");
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
   const day = String(d.getDate()).padStart(2, "0");
   return `${y}-${m}-${day}`;
 }
@@ -715,23 +715,23 @@ function calToYMD(d) {
 function calBuildBusyIndex(snap) {
   const idx = {};
   snap.forEach(docu => {
-    const data   = docu.data();
+    const data = docu.data();
     const status = data.status || "pending";
 
     // เฉพาะ pending / approved
     if (!["pending", "approved"].includes(status)) return;
 
     const start = calToDate(data.startDate);
-    const end   = calToDate(data.endDate);
+    const end = calToDate(data.endDate);
     if (!start || !end) return;
 
     const bookingInfo = {
       id: docu.id,
-      product:   data.product || "-",
-      userName:  data.userName || "",
+      product: data.product || "-",
+      userName: data.userName || "",
       userEmail: data.userEmail || "",
       startDate: data.startDate,
-      endDate:   data.endDate,
+      endDate: data.endDate,
       status
     };
 
@@ -751,11 +751,11 @@ function calBuildBusyIndex(snap) {
 function calUpdateTodayStatus() {
   if (!calTodayStatus) return;
 
-  const today    = new Date();
+  const today = new Date();
   const todayYMD = calToYMD(today);
-  const info     = calBusyIndex[todayYMD];
-  const options  = { year: "numeric", month: "long", day: "numeric" };
-  const label    = today.toLocaleDateString("th-TH", options);
+  const info = calBusyIndex[todayYMD];
+  const options = { year: "numeric", month: "long", day: "numeric" };
+  const label = today.toLocaleDateString("th-TH", options);
 
   if (!calLoaded) {
     calTodayStatus.textContent = "วันนี้กำลังโหลดข้อมูล…";
@@ -780,12 +780,12 @@ function calRender() {
   // ถ้ายังไม่ได้ตั้งค่าเดือนเริ่มต้น
   if (typeof calYear === "undefined" || typeof calMonth === "undefined") {
     const now = new Date();
-    calYear   = now.getFullYear();
-    calMonth  = now.getMonth();
+    calYear = now.getFullYear();
+    calMonth = now.getMonth();
   }
 
-  const first      = new Date(calYear, calMonth, 1);
-  const firstDow   = first.getDay(); // 0=อา..6=ส
+  const first = new Date(calYear, calMonth, 1);
+  const firstDow = first.getDay(); // 0=อา..6=ส
   const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate(); // อาจไม่ใช้แต่เก็บไว้
 
   // label เดือนด้านบน
@@ -794,18 +794,18 @@ function calRender() {
 
   // วันแรกที่ใช้แสดงในช่อง (ถอยกลับไปวันอาทิตย์ของสัปดาห์แรก)
   const startCellDate = new Date(calYear, calMonth, 1 - firstDow);
-  const todayYMD      = calToYMD(new Date());
+  const todayYMD = calToYMD(new Date());
 
   const cells = [];
   for (let i = 0; i < 42; i++) { // 6 แถว * 7 คอลัมน์
     const d = new Date(startCellDate);
     d.setDate(startCellDate.getDate() + i);
 
-    const ymd    = calToYMD(d);
+    const ymd = calToYMD(d);
     const inMonth = d.getMonth() === calMonth;
 
-    const info    = calBusyIndex[ymd];
-    const isBusy  = !!info;
+    const info = calBusyIndex[ymd];
+    const isBusy = !!info;
     const isToday = ymd === todayYMD;
 
     const classes = ["cal-day"];
@@ -815,7 +815,7 @@ function calRender() {
     if (isToday) classes.push("today");
 
     const statusText = isBusy ? `มีจอง ${info.count} รายการ` : "ว่าง";
-    const badge      = isBusy ? `<div class="count-badge">${info.count}</div>` : "";
+    const badge = isBusy ? `<div class="count-badge">${info.count}</div>` : "";
 
     cells.push(`
       <div class="${classes.join(" ")}" data-date="${ymd}">
@@ -832,7 +832,7 @@ function calRender() {
   const dayEls = calGrid.querySelectorAll(".cal-day.clickable");
   dayEls.forEach(el => {
     el.addEventListener("click", () => {
-      const ymd  = el.getAttribute("data-date");
+      const ymd = el.getAttribute("data-date");
       const info = calBusyIndex[ymd];
       if (!info) return;
 
@@ -849,28 +849,28 @@ function calRender() {
     });
   });
 
-// Popup helper: show/hide message modal
-function showPopup(title, text) {
-  const modal = document.getElementById('popupModal');
-  if (!modal) { alert(text); return; }
-  const titleEl = modal.querySelector('.popup-title');
-  const bodyEl = modal.querySelector('.popup-body');
-  titleEl.textContent = title || 'ข้อความ';
-  bodyEl.textContent = text || '';
-  modal.setAttribute('aria-hidden', 'false');
-}
-const popupCloseBtn = document.getElementById('popupClose');
-if (popupCloseBtn) popupCloseBtn.addEventListener('click', () => {
-  const modal = document.getElementById('popupModal');
-  if (modal) modal.setAttribute('aria-hidden', 'true');
-});
+  // Popup helper: show/hide message modal
+  function showPopup(title, text) {
+    const modal = document.getElementById('popupModal');
+    if (!modal) { alert(text); return; }
+    const titleEl = modal.querySelector('.popup-title');
+    const bodyEl = modal.querySelector('.popup-body');
+    titleEl.textContent = title || 'ข้อความ';
+    bodyEl.textContent = text || '';
+    modal.setAttribute('aria-hidden', 'false');
+  }
+  const popupCloseBtn = document.getElementById('popupClose');
+  if (popupCloseBtn) popupCloseBtn.addEventListener('click', () => {
+    const modal = document.getElementById('popupModal');
+    if (modal) modal.setAttribute('aria-hidden', 'true');
+  });
 }
 
 // เปลี่ยนเดือน
 calPrevMonth?.addEventListener("click", () => {
   if (typeof calYear === "undefined") {
     const now = new Date();
-    calYear  = now.getFullYear();
+    calYear = now.getFullYear();
     calMonth = now.getMonth();
   }
   calMonth -= 1;
@@ -884,7 +884,7 @@ calPrevMonth?.addEventListener("click", () => {
 calNextMonth?.addEventListener("click", () => {
   if (typeof calYear === "undefined") {
     const now = new Date();
-    calYear  = now.getFullYear();
+    calYear = now.getFullYear();
     calMonth = now.getMonth();
   }
   calMonth += 1;
@@ -903,9 +903,9 @@ function initAdminCalendar() {
   if (initAdminCalendar._inited) return;
   initAdminCalendar._inited = true;
 
-  const now   = new Date();
-  calYear     = now.getFullYear();
-  calMonth    = now.getMonth();
+  const now = new Date();
+  calYear = now.getFullYear();
+  calMonth = now.getMonth();
 
   // If anonymous, try reading from a sanitized public collection `bookings_public`.
   const collName = (auth.currentUser || localStorage.getItem("isLoggedIn")) ? "bookings" : "bookings_public";
@@ -914,7 +914,7 @@ function initAdminCalendar() {
   // fall back to rendering an empty calendar so anonymous users still see the UI.
   onSnapshot(qref, (snap) => {
     calBusyIndex = calBuildBusyIndex(snap);
-    calLoaded    = true;
+    calLoaded = true;
     calRender();
     calUpdateTodayStatus();
   }, (err) => {
