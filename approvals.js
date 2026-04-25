@@ -4,12 +4,12 @@ import { getFirestore, doc, onSnapshot } from "https://www.gstatic.com/firebasej
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.3.0/firebase-auth.js";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyDugjVmL2TfZpbjdaRh9w5anCMS01XwAOQ",
-  authDomain: "glowgram-49b76.firebaseapp.com",
-  projectId: "glowgram-49b76",
-  storageBucket: "glowgram-49b76.firebasestorage.app",
-  messagingSenderId: "923913334247",
-  appId: "1:923913334247:web:7aab859132f2d5d1cd6142"
+  apiKey: "AIzaSyDpZVOQA1YhNgW4CgiRI6WteAi3tiEZhac",
+  authDomain: "porpaphoto.firebaseapp.com",
+  projectId: "porpaphoto",
+  storageBucket: "porpaphoto.firebasestorage.app",
+  messagingSenderId: "332750950001",
+  appId: "1:332750950001:web:131128b0644eec9f3a15d0"
 };
 
 const app = initializeApp(firebaseConfig);
