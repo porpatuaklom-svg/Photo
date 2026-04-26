@@ -120,6 +120,19 @@ function formatTHB(num) {
     return "฿" + (num || 0).toLocaleString("th-TH");
   }
 }
+
+const statusTextMap = {
+  pending: "จองแล้ว",
+  approved: "รับของแล้ว",
+  rejected: "คืนของแล้ว",
+  paid: "ชำระเงินแล้ว",
+  requested: "ขอคืนอุปกรณ์"
+};
+function statusDisplay(statusRaw) {
+  const key = String(statusRaw || "").toLowerCase();
+  return statusTextMap[key] || String(statusRaw || "");
+  }
+
 function toDate(v) {
   if (!v) return null;
   const [y, m, d] = v.split("-").map(Number);
@@ -485,7 +498,7 @@ form?.addEventListener("submit", async (e) => {
         `ช่วงวันที่ที่เลือกมีการจองอุปกรณ์นี้แล้ว\n\n` +
         `อุปกรณ์: ${conflict.product || "-"}\n` +
         `วันที่: ${conflict.startDate || ""} ถึง ${conflict.endDate || ""}\n` +
-        `สถานะ: ${conflict.status || ""}\n\n` +
+        `สถานะ: ${statusDisplay(conflict.status)}\n\n` +
         `กรุณาเลือกวันอื่นครับ`
       );
       if (submitBtn) {
@@ -839,7 +852,7 @@ function calRender() {
       const lines = info.bookings.map(b =>
         `• ${b.product} (${b.startDate} ถึง ${b.endDate})\n` +
         `  ผู้จอง: ${b.userName || "-"}\n` +
-        `  สถานะ: ${b.status}`
+        `  สถานะ: ${statusDisplay(b.status)}`
       ).join("\n\n");
 
       // Use popup modal when available
