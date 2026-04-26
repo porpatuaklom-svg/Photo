@@ -39,9 +39,6 @@ async function signInWithGoogleAndRoute() {
 
     // ตรวจสิทธิ์: whitelist email หรืออยู่ใน Firestore admins
     const WHITELIST = [
-      "lanjakorn13524@gmail.com",
-      "admin@glowgram.foto",
-      "glowgramfotore@gmail.com",
       "porpatuaklom@gmail.com"
     ];
     const isWhitelisted = WHITELIST.includes(((user.email || "").toLowerCase()));
