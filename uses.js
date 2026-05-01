@@ -299,8 +299,7 @@ window.triggerGoogleLogin = function (btnEl) {
 };
 
 function syncEndMin() {
-  if (startDateEl?.value) endDateEl.min = startDateEl.value;
-  else endDateEl?.removeAttribute("min");
+  // ปิดการจำกัด min เพื่อให้สามารถกรอกย้อนหลังกว่าได้
 }
 function computeEndFromStartAndDays() {
   const start = toDate(startDateEl?.value);
@@ -309,15 +308,17 @@ function computeEndFromStartAndDays() {
   const end = new Date(start);
   end.setDate(end.getDate() + (Math.max(1, days) - 1));
   if (endDateEl) endDateEl.value = toYMD(end);
-  syncEndMin();
 }
 function computeDaysFromRange() {
   const start = toDate(startDateEl?.value);
   const end = toDate(endDateEl?.value);
   if (!start || !end) return;
   if (end < start) {
-    if (endDateEl && startDateEl) endDateEl.value = startDateEl.value;
-    if (daysEl) daysEl.value = 1;
+    if (startDateEl && endDateEl) {
+      startDateEl.value = toYMD(end);
+      endDateEl.value = toYMD(start);
+    }
+    if (daysEl) daysEl.value = daysDiffInclusive(end, start);
     return;
   }
   if (daysEl) daysEl.value = daysDiffInclusive(start, end);
