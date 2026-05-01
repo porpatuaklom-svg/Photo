@@ -59,6 +59,15 @@ const facebookEl = document.getElementById("facebookName");
 const userNameEl = document.getElementById("userName");   // ชื่อผู้จอง
 const userEmailEl = document.getElementById("userEmail");  // อีเมลผู้จอง
 
+if (facebookEl) {
+  facebookEl.addEventListener("input", () => {
+    const cleaned = sanitizePhoneValue(facebookEl.value);
+    if (facebookEl.value !== cleaned) {
+      facebookEl.value = cleaned;
+    }
+  });
+}
+
 // เมนูโปรไฟล์บนเฮดเดอร์
 const userDropdown = document.getElementById("userDropdown");
 const userDisplayName = document.getElementById("userDisplayName");
@@ -108,6 +117,9 @@ function normalizeDriveUrl(url = "") {
 function parsePricePerDay(raw) {
   const num = (raw || "").toString().replace(/[^\d.]/g, "");
   return Number(num || 0);
+}
+function sanitizePhoneValue(value) {
+  return (value || "").toString().replace(/\D/g, "").slice(0, 10);
 }
 function formatTHB(num) {
   try {
@@ -465,6 +477,13 @@ form?.addEventListener("submit", async (e) => {
     window.location.href = "auth.html";
     return;
   }
+
+  const phoneValue = sanitizePhoneValue(facebookEl?.value || "");
+  if (phoneValue.length !== 10) {
+    alert("กรุณากรอกเบอร์โทร 10 หลักโดยใช้ตัวเลขเท่านั้น");
+    return;
+  }
+
   if (!startDateEl?.value || !endDateEl?.value || !daysEl?.value) {
     alert("กรุณากรอกวันที่เช่า ถึงวันที่ และจำนวนวันให้ครบ");
     return;
@@ -549,7 +568,7 @@ form?.addEventListener("submit", async (e) => {
       userId: uid,
       userName: bookedName || "",
       userEmail: bookedEmail || "",
-      facebookName: (facebookEl?.value || "").trim(),
+      facebookName: phoneValue,
     };
 
     const docRef = await addDoc(collection(db, "bookings"), payload);
