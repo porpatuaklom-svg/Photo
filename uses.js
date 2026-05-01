@@ -298,8 +298,19 @@ window.triggerGoogleLogin = function (btnEl) {
   window.location.href = "auth.html";
 };
 
+function getTodayYMD() {
+  return toYMD(new Date());
+}
 function syncEndMin() {
-  // ปิดการจำกัด min เพื่อให้สามารถกรอกย้อนหลังกว่าได้
+  const todayYMD = getTodayYMD();
+  if (startDateEl) startDateEl.min = todayYMD;
+  if (endDateEl) {
+    if (startDateEl?.value) {
+      endDateEl.min = startDateEl.value;
+    } else {
+      endDateEl.min = todayYMD;
+    }
+  }
 }
 function computeEndFromStartAndDays() {
   const start = toDate(startDateEl?.value);
@@ -313,15 +324,22 @@ function computeDaysFromRange() {
   const start = toDate(startDateEl?.value);
   const end = toDate(endDateEl?.value);
   if (!start || !end) return;
-  if (end < start) {
-    if (startDateEl && endDateEl) {
-      startDateEl.value = toYMD(end);
-      endDateEl.value = toYMD(start);
-    }
-    if (daysEl) daysEl.value = daysDiffInclusive(end, start);
-    return;
+
+  const today = toDate(getTodayYMD());
+  let normalizedStart = start;
+  let normalizedEnd = end;
+
+  if (normalizedStart < today) {
+    normalizedStart = today;
   }
-  if (daysEl) daysEl.value = daysDiffInclusive(start, end);
+
+  if (normalizedEnd < normalizedStart) {
+    normalizedEnd = normalizedStart;
+  }
+
+  if (startDateEl) startDateEl.value = toYMD(normalizedStart);
+  if (endDateEl) endDateEl.value = toYMD(normalizedEnd);
+  if (daysEl) daysEl.value = daysDiffInclusive(normalizedStart, normalizedEnd);
 }
 function updateTotal() {
   const price = parsePricePerDay(priceEl?.value);
@@ -330,6 +348,9 @@ function updateTotal() {
 }
 
 startDateEl?.addEventListener("change", () => {
+  if (startDateEl?.value && startDateEl.value < getTodayYMD()) {
+    startDateEl.value = getTodayYMD();
+  }
   syncEndMin();
   if (daysEl?.value) computeEndFromStartAndDays();
   updateTotal();
@@ -487,6 +508,12 @@ form?.addEventListener("submit", async (e) => {
 
   if (!startDateEl?.value || !endDateEl?.value || !daysEl?.value) {
     alert("กรุณากรอกวันที่เช่า ถึงวันที่ และจำนวนวันให้ครบ");
+    return;
+  }
+
+  const todayYMD = getTodayYMD();
+  if (startDateEl.value < todayYMD || endDateEl.value < todayYMD) {
+    alert("กรุณาเลือกวันที่ไม่ย้อนหลังจากวันนี้");
     return;
   }
 
